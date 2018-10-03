@@ -1,0 +1,56 @@
+.button-success,
+.button-error,
+.button-warning,
+.button-secondary {
+	color: white;
+	border-radius: 4px;
+	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.button-success {
+     background: rgb(28, 184, 65); /* this is a green */
+}
+
+.button-error {
+	background: rgb(202, 60, 60); /* this is a maroon */
+}
+
+.button-warning {
+ 	background: rgb(223, 117, 20); /* this is an orange */
+}
+
+.button-secondary {
+	background: rgb(66, 184, 221); /* this is a light blue */
+}
+
+
+.button-text {
+  font-family: Arial;
+  font-size: 16px;
+  text-decoration: none;
+  background:none;
+  border:none;
+  outline-color: transparent;
+  outline-style: none;
+}
+
+.button-text:focus {
+  outline-color: transparent;
+  outline-style: none;
+}
+
+
+.button-text-success {
+     color:#1B9221; /* this is a green */
+}
+
+.button-text-primary {
+	color:#007EE5; /* this is a light blue */
+}
+
+.button-text-disabled{
+	color: rgb(240, 240, 240); /* this is a light blue */
+	/*background: #EEEEEE;*/
+}
+
+

@@ -1,0 +1,81 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `pr_job_apply`(	c_first_name VARCHAR(50), 
+															c_middle_name VARCHAR(50), 
+															c_last_name VARCHAR(50),
+															c_salutation VARCHAR(4),
+															c_email VARCHAR(50), 
+															c_phone_home VARCHAR(25), 
+															c_phone_mobile VARCHAR(25), 
+															c_cv VARCHAR(100), 
+															j_id INT, conseml TIMESTAMP, 
+															c_email_time TIMESTAMP, 
+                                                            c_campaigne VARCHAR(100))
+BEGIN
+
+DECLARE candid INT;
+DECLARE ret VARCHAR(50);
+
+IF c_email IS NOT NULL AND TRIM(c_email) <> ''
+THEN
+
+	IF EXISTS (SELECT candidate_id FROM `hncom`.`candidates` WHERE candidate_email COLLATE utf8mb4_unicode_ci LIKE c_email COLLATE utf8mb4_unicode_ci)
+		
+        THEN 
+			
+            UPDATE `hncom`.`candidates` SET 
+										candidate_first_name	= IFNULL(c_first_name, 		candidate_first_name), 
+                                        candidate_middle_name	= IFNULL(c_middle_name, 	candidate_middle_name),
+                                        candidate_last_name		= IFNULL(c_last_name, 		candidate_last_name),
+                                        candidate_salutation	= IFNULL(c_salutation, 		candidate_salutation),
+                                        candidate_phone_home	= IFNULL(c_phone_home, 		candidate_phone_home),
+                                        candidate_phone_mobile	= IFNULL(c_phone_mobile,	candidate_phone_mobile),
+										candidate_cv			= IFNULL(c_cv , 			candidate_cv),
+                                        candidate_updated		= NOW()
+                                        
+			WHERE candidate_email COLLATE utf8mb4_unicode_ci LIKE c_email COLLATE utf8mb4_unicode_ci;
+            
+		ELSE 
+		
+			INSERT INTO `hncom`.`candidates` (	candidate_first_name, 
+												candidate_middle_name, 
+												candidate_last_name, 
+												candidate_salutation, 
+												candidate_email, 
+												candidate_phone_home, 
+												candidate_phone_mobile, 
+												candidate_cv)
+                                            
+			VALUES (c_first_name, 
+					c_middle_name, 
+					c_last_name, 
+					c_salutation, 
+					c_email, 
+					c_phone_home, 
+					c_phone_mobile, 
+					c_cv );
+        
+	END IF;
+
+	SET candid = (SELECT candidate_id FROM `hncom`.`candidates` WHERE candidate_email COLLATE utf8mb4_unicode_ci LIKE c_email COLLATE utf8mb4_unicode_ci);
+
+	INSERT INTO job_Applications (	candidate_id, 
+									job_id, 
+									consultant_emailed, 
+									candidate_emailed, 
+									campaign)
+	VALUES (candid, 
+			j_id, 
+			conseml, 
+			c_email_time, 
+			c_campaigne);
+
+	SET ret = 'Application successful';
+
+ELSE
+
+	SET ret = 'Application failed - email address required';
+
+END IF;
+
+SELECT ret;
+
+END
